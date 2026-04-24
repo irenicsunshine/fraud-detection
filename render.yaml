@@ -1,0 +1,83 @@
+# =============================================================================
+# 🎓 RENDER.YAML — Deployment Configuration for Render.com
+# =============================================================================
+#
+# WHAT IS RENDER.COM?
+# --------------------
+# Render is a cloud platform that hosts web services for free.
+# Free tier gives you: 512MB RAM, shared CPU, auto-deploy from GitHub.
+# That's enough to run our FastAPI inference API.
+#
+# HOW TO DEPLOY:
+# ---------------
+# 1. Push this repo to GitHub (if not already done)
+# 2. Go to https://render.com → New → Web Service
+# 3. Connect your GitHub repo
+# 4. Render finds this render.yaml and auto-configures everything
+# 5. Click "Deploy" — done!
+#
+# Every time you push to main, Render auto-redeploys. 🚀
+#
+# WHAT THIS FILE DEFINES:
+# ------------------------
+# - Service type (web server)
+# - Build command (install dependencies)
+# - Start command (run the API)
+# - Environment variables
+# - Health check path
+#
+# 🎓 FREE TIER LIMITATIONS:
+# - Spins down after 15 minutes of inactivity (cold start ~30s on wake)
+# - 512MB RAM — enough for inference, not for training
+# - 100 GB bandwidth/month
+# - No persistent disk (models must be in the repo or fetched at startup)
+# =============================================================================
+
+services:
+  - type: web
+    name: fraud-detection-api
+    runtime: python
+    region: oregon  # US West — change to "frankfurt" for EU
+
+    # 🎓 BUILD COMMAND
+    # Runs once when deploying. Installs all dependencies from requirements.txt.
+    buildCommand: pip install -r requirements.txt
+
+    # 🎓 START COMMAND
+    # Runs every time the service starts.
+    # --workers 1: one worker process (free tier has limited CPU)
+    # --host 0.0.0.0: listen on all interfaces (required on cloud servers)
+    # --port $PORT: Render injects the PORT env var automatically
+    startCommand: uvicorn api:app --host 0.0.0.0 --port $PORT --workers 1
+
+    # 🎓 PLAN
+    # "free" = Render's free tier
+    # Upgrade to "starter" ($7/month) for always-on + more RAM
+    plan: free
+
+    # 🎓 HEALTH CHECK
+    # Render periodically calls this path to verify the service is alive.
+    # If it returns non-200, Render marks the deploy as failed.
+    healthCheckPath: /health
+
+    # 🎓 ENVIRONMENT VARIABLES
+    # These are available as os.environ["VAR_NAME"] in your Python code.
+    # Don't put secrets (API keys, passwords) here — use Render's dashboard
+    # "Environment" tab for secrets so they stay out of your git history.
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.0"
+
+      - key: LOG_LEVEL
+        value: INFO
+
+      # 🎓 MODEL_DIR tells the app where to find the pre-trained models.
+      # On Render, the working directory is the repo root, so models/ works.
+      - key: MODEL_DIR
+        value: models
+
+      # 🎓 API_KEY — Set this in Render's dashboard (Environment tab), NOT here.
+      # This entry just documents that the variable exists and what it's for.
+      # Keeping the actual value out of git is a security best practice.
+      - key: API_KEY
+        sync: false  # Tells Render: "I'll set this manually in the dashboard"

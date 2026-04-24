@@ -1,1 +1,73 @@
-data/PS_20174392719_1491204439457_log.csv
+# =============================================================================
+# .gitignore — Files Git Should Never Track
+# =============================================================================
+#
+# 🎓 WHAT IS .gitignore?
+# ------------------------
+# Git tracks every file in your repo by default.
+# .gitignore tells Git: "ignore these files — don't track, don't commit them."
+#
+# WHY IGNORE THINGS?
+# 1. Large files (CSVs, model binaries) → too big for GitHub (100MB limit)
+# 2. Secrets (.env, API keys) → never commit credentials
+# 3. Generated files (__pycache__) → reproducible, no need to share
+# 4. Local config (venv, IDE files) → different per developer
+
+# -----------------------------------------------------------------------------
+# DATA — Large files that should never be committed
+# -----------------------------------------------------------------------------
+data/*.csv
+data/*.zip
+data/*.parquet
+
+# -----------------------------------------------------------------------------
+# PYTHON — Auto-generated files
+# -----------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+
+# -----------------------------------------------------------------------------
+# VIRTUAL ENVIRONMENTS — Local Python installs
+# -----------------------------------------------------------------------------
+venv/
+.venv/
+env/
+.env/
+
+# -----------------------------------------------------------------------------
+# SECRETS — Never commit these
+# -----------------------------------------------------------------------------
+.env
+.env.local
+.env.production
+kaggle.json
+
+# -----------------------------------------------------------------------------
+# IDE / EDITOR — Personal config files
+# -----------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# -----------------------------------------------------------------------------
+# CLAUDE CODE — AI assistant internal state
+# -----------------------------------------------------------------------------
+.claude/
+
+# -----------------------------------------------------------------------------
+# TEST ARTIFACTS
+# -----------------------------------------------------------------------------
+.pytest_cache/
+.coverage
+htmlcov/
+
+# -----------------------------------------------------------------------------
+# BUILD ARTIFACTS
+# -----------------------------------------------------------------------------
+dist/
+build/
+*.egg-info/
