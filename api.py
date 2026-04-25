@@ -282,6 +282,18 @@ app.add_middleware(
 # GET = retrieve information (no side effects)
 # POST = send data for processing (like scoring a transaction)
 
+@app.get("/", tags=["System"])
+async def root():
+    """Welcome message and links to docs."""
+    return {
+        "name": "Fraud Detection API",
+        "version": "1.0.0",
+        "status": "running",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
+
 @app.get("/health", response_model=HealthResponse, tags=["System"])
 async def health_check():
     """
