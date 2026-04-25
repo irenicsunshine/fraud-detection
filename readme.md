@@ -180,3 +180,14 @@ The default 0.5 decision threshold isn't optimal for imbalanced data. We tune it
 - 6,362,620 transactions over 30 days
 - Fraud rate: ~0.13% (highly imbalanced)
 - Only TRANSFER and CASH_OUT transactions can be fraudulent
+
+---
+
+## Roadmap
+
+Things to add in future iterations:
+
+- **Rate limiting** — cap requests per IP (e.g. 100/min) to prevent abuse
+- **Request logging** — persist every prediction to a database or file for auditing and monitoring
+- **Model versioning** — ability to hot-swap models via config without redeploying
+- **Frontend** — a simple web form to test predictions without curl
